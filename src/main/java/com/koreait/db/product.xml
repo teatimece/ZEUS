@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="product">
+
+
+	<select id="searchProduct" parameterType="string" resultType="map">
+		select * from tb_product where (p_name LIKE CONCAT('%', #{searchText}, '%') or p_deallocation LIKE CONCAT('%', #{searchText}, '%')) and p_salesStatus = '판매중'
+	</select>
+
+	<!-- 검색어 + 지역 검색 -->
+	<select id="searchProductArea" parameterType="map" resultType="map">
+		select * from tb_product where (p_name LIKE CONCAT('%', #{searchText}, '%') or p_deallocation LIKE CONCAT('%', #{searchText}, '%')) and p_deallocation=#{cLocation} and p_salesStatus = '판매중'
+	</select>
+
+	<select id="mainProduct" resultType="map">
+		select * from tb_product where p_salesStatus = '판매중' order by p_idx desc  
+	</select>
+	
+	<insert id="uploadproduct" parameterType="map">
+		  insert into tb_product (p_name, p_price, p_state, p_delcharge, p_deallocation, p_category, p_content, p_memidx, p_tag, p_picturepath, p_picture, p_exchange,p_priceConsult,p_quantity)
+		  values(#{p_name}, #{p_price}, #{p_state}, #{p_delcharge}, #{p_deallocation}, #{p_category}, #{p_content}, #{p_memidx}, #{p_tag}, #{p_picturepath}, #{p_picture}, #{p_exchange}, #{p_priceConsult}, #{p_quantity})
+	</insert>
+	
+	<!-- 상품 idx -> 올린 상점 idx -->
+	<select id="storeIdx" parameterType="int" resultType="int">
+		select p_memidx from tb_product where p_idx=#{p_idx}
+	</select>
+	
+	<!-- 상점 이름 가져오는 sql -->
+	<select id="storeName" parameterType="int" resultType="string">
+		select m_store from tb_member  where m_idx = #{m_idx}
+	</select>
+	
+	<!-- 상점 idx -> 올린 상품 개수 -->
+	<select id="productCnt" parameterType="int" resultType="int">
+		select count(p_idx) as cnt from tb_product where p_memidx=#{m_idx}
+	</select>
+	
+	<!-- 팔로우 수 리턴 -->
+	<select id="followCnt" parameterType="int" resultType="int">
+		select count(f_idx) as cnt from tb_following where f_follow=#{m_idx}
+	</select>
+	
+	<select id="recentProduct" parameterType="int" resultType="map">
+		select * from tb_product where p_memidx = #{m_idx} order by p_regdate desc limit 0,2;
+	</select>
+	
+	<select id="cateProduct" parameterType="int" resultType="map">
+		select * from tb_product where p_category = #{c_idx} order by p_idx desc;
+	</select>
+
+	<!-- 지헌님 상품상세 -->
+	<select id="info" parameterType="string" resultType="map">
+		select * from tb_product where p_idx=#{p_idx}
+	</select>
+	
+	<update id="productZzimUp" parameterType="int">
+		update tb_product set p_zzim=p_zzim+1 where p_idx=#{p_idx}
+		
+	</update>
+	
+	<update id="productZzimDown" parameterType="int">
+		update tb_product set p_zzim=p_zzim-1 where p_idx=#{p_idx}
+	</update>
+	
+	<select id="selectZzim" parameterType="int" resultType="string">
+		select m_zzim from tb_member where m_idx=#{m_idx} 
+	</select>
+	
+	<update id="updateZzim" parameterType="map">
+		update tb_member set m_zzim = #{zzimStr} where m_idx=#{m_idx}
+	</update>
+	
+	<select id="zzimCnt" parameterType="int" resultType="int">
+		select p_zzim from tb_product where p_idx = #{p_idx}
+	</select>
+	
+		<select id="storeNum" parameterType="String" resultType="String">
+		select p_memidx from tb_product where p_idx=#{p_idx}
+	</select>
+</mapper> 

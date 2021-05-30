@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="follow">
+	<select id="followingList" parameterType="string"
+		resultType="string">
+		select f_follow from tb_following where
+		f_memidx=#{f_memidx}
+	</select>
+
+	<select id="followingInfo" parameterType="string"
+		resultType="map">
+		select * from tb_member where m_idx = #{m_idx}
+	</select>
+
+ 
+	<!-- 승철님 내상점 -->
+	<select id="followingcnt" parameterType="String"
+		resultType="int">select count(f_follow) from tb_following where
+		f_memidx=#{idx}
+	</select>
+	
+	<select id="followcnt" parameterType="String" resultType="int">
+		select count(f_memidx) from tb_following where f_follow=#{idx}
+	</select>
+	<select id="followList" resultType="string" parameterType="string">
+		select f_memidx from tb_following where f_follow=#{f_memidx}
+	</select>
+	<select id="productcnt" parameterType="int" resultType="string">
+		select count(p_idx) from tb_product where p_memidx=#{m_idx}
+	</select>
+ 	<select id="youfollow" parameterType="int" resultType="String">
+ 		select count(f_memidx) from tb_following where f_follow=#{m_idx}
+	</select>
+	
+	<delete id="followingdel" parameterType="map">
+		delete from tb_following where f_follow=#{m_idx}
+	</delete> 
+	
+	<select id="followingphoto" resultType="map" parameterType="string">
+		select * from tb_product where p_memidx= #{m_idx} order by p_regdate desc limit 0,3;
+	</select>
+
+	<insert id="followingup" parameterType="map">insert into tb_following
+		(f_memidx, f_follow) values (#{f_memidx}, #{f_follow}) 
+		</insert>
+		
+	<delete id="followingdown" parameterType="map">
+		delete from tb_following where f_memidx=#{f_memidx} and f_follow=#{f_follow}
+	</delete> 
+	
+	<select id="followingYN" parameterType="map" resultType="int">
+ 		select count(f_idx) from tb_following where f_memidx=#{f_memidx} and f_follow=#{f_follow}
+	</select>
+	
+<!--	<select resultType="string" parameterType="string"
+		id="followingList">select f_follow from tb_following where f_memidx=#{f_memidx}
+	</select>
+	<select resultType="map" parameterType="string"
+		id="followingInfo">select * from tb_member where m_idx = #{m_idx} </select>
+-->
+
+
+	
+
+
+
+
+
+</mapper>

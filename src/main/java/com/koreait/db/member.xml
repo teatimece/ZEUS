@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+
+	<!-- 민우님 로그인 시작 -->
+	<select id="kakaoCheck" parameterType="String" resultType="int">
+		select count(m_idx) from tb_member where m_kakaoemail=#{m_kakaoemail}
+	</select>
+	<select id="naverCheck" parameterType="String" resultType="int">
+		select count(m_idx) from tb_member where m_naveremail=#{m_naveremail}
+	</select>
+	<select id="phoneCheck" parameterType="String" resultType="int">
+		select count(m_idx) from tb_member where m_hp=#{m_hp} and m_ssn1=#{m_ssn1} and m_ssn1=#{m_ssn1} and m_username=#{m_username} </select>
+	<select id="duplicate" parameterType="String" resultType="int">select
+		count(m_idx) from tb_member where m_hp=#{m_hp}</select>
+
+	<insert id="join" parameterType="map">insert into tb_member
+		(m_username, m_naveremail, m_kakaoemail, m_ssn1, m_ssn2, m_hp) values
+		(#{m_username}, #{m_naveremail}, #{m_kakaoemail}, #{m_ssn1},
+		#{m_ssn2}, #{m_hp}) </insert>
+	<update id="kakaoupdate" parameterType="map">update tb_member set
+		m_kakaoemail=#{m_kakaoemail} where m_hp=#{m_hp}</update>
+	<update id="naverupdate" parameterType="map">update tb_member set
+		m_naveremail=#{m_naveremail} where m_hp=#{m_hp}</update>
+
+	<select id="kakaologin" parameterType="map" resultType="map">
+		select m_idx, m_username from tb_member where m_kakaoemail=#{m_kakaoemail}
+	</select>
+
+	<select id="naverlogin" parameterType="map" resultType="map">
+		select m_idx, m_username from tb_member where m_naveremail=#{m_naveremail}
+	</select>
+
+	<select id="phonelogin" parameterType="map" resultType="map">
+		select m_idx, m_username from tb_member where m_hp=#{m_hp}
+	</select>
+	<!-- 민우님 로그인 끝 -->
+
+	<!-- 누구꺼지 -->
+	<select id="meminfo" parameterType="string" resultType="map">
+		select * from tb_member where m_idx=#{m_idx}
+	</select>
+	
+	<select id="zzimString" parameterType="string" resultType="string">
+		select m_zzim from tb_member where m_idx=#{m_idx}
+	</select>
+	
+	<!-- 승철님 내상점 -->
+	<select id="myshop" parameterType="map" resultType="map">
+		select * from tb_member where m_idx=#{m_idx}
+	</select>
+	<select id="update_myshop" parameterType="map" resultType="map">
+		update tb_member set m_store=#{m_store} where m_idx=#{m_idx}
+	</select>
+	<select id="update_intro_myshop" parameterType="map" resultType="map">
+		update tb_member set m_intro=#{m_intro} where m_idx=#{m_idx}
+	</select>
+
+	<!-- 내상품 -->
+	<select id="myshop_product" parameterType="string" resultType="map">
+		select * from tb_product where p_memidx=#{p_memidx}
+	</select>
+
+
+	<!-- 상점후기 -->
+	<select id="myshop_question" parameterType="string" resultType="map">
+		select * from tb_review where rv_idx LIKE CONCAT('%', #{questionText}, '%')
+	</select>
+
+	<select id="myshop_question1" parameterType="string"
+		resultType="map">
+		select * from tb_review where rv_storeidx=#{rv_storeidx}
+	</select>
+
+	<select id="myshop_question3" parameterType="string" resultType="string">
+		select m_store from tb_member where m_idx=#{m_idx}
+	</select>
+
+	<!-- 상점문의 -->
+	<select id="myshop_inquire" parameterType="string" resultType="map">
+		select * from tb_inquire where i_storeidx=#{i_storeidx}
+	</select>
+
+	
+	<select id="myshop_inquire2" parameterType="string"
+		resultType="string">
+		select m_store from tb_member where m_idx=#{m_idx}
+	</select>
+
+
+	<insert id="myshop_inquire3" parameterType="map">
+		insert into tb_inquire (i_memidx, i_storeidx, i_content, i_productidx) values (#{i_memidx},#{i_storeidx},#{i_content},10000)
+	</insert>
+	
+	<insert id="yourshop_inquire" parameterType="map">
+		insert into tb_inquire (i_memidx, i_storeidx, i_content, i_productidx) values (#{i_memidx},#{i_storeidx},#{i_content},10000)
+	</insert>
+	
+	<select id="inquire" parameterType="string" resultType="map">
+		select * from tb_inquire where i_productidx=#{i_productidx}
+	</select>
+
+	<select id="inquire1" parameterType="string" resultType="string">
+		select m_store from tb_member where m_idx=#{m_idx}
+	</select>
+	
+	<!-- zzim 사이드 카운트(20210405) -->
+	<select resultType="String" parameterType="String" id="zzimcnt">select m_zzim from tb_member where m_idx=#{m_idx} </select>
+ 
+ 
+ 	<!-- 라스트 로그인 (20210405) -->
+ 	<update id="lastlogin" parameterType="map">
+ 	update tb_member set m_lastlogin=now() where m_idx=#{m_idx};
+ 	</update>
+ 	
+ 	<select id="hpcall" parameterType="string" resultType="string">
+		select m_hp from tb_member where m_idx=#{p_memidx}
+	</select>
+</mapper>
